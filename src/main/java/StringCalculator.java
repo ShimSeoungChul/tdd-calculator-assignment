@@ -3,6 +3,7 @@ import java.util.Arrays;
 import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class StringCalculator {
 
@@ -77,10 +78,31 @@ public class StringCalculator {
 	private String getSeperator(String numbers) {
 		String regExpression = "//(.*?)\n";
 		String seperatorPart = getMatched(regExpression, numbers);
+		String seperator = seperatorPart;
 		if (isMoreThanTwoWordsSeperator(seperatorPart)) {
-			seperatorPart = getMoreThanTwoWordsSeperator(seperatorPart);
+			if (havaMultiSeperator(seperatorPart)) {
+				seperator = getMultiSeperator(seperatorPart);
+			} else {
+				seperator = getMoreThanTwoWordsSeperator(seperatorPart);
+			}
 		}
-		return seperatorPart;
+
+		return seperator;
+	}
+
+	private String getMultiSeperator(String seperatorString) {
+		var seperatorList = new ArrayList<String>();
+		String regExpression = "[\\[](.*?)[\\]]";
+		Pattern speratorPattern = Pattern.compile(regExpression);
+		Matcher matcher = speratorPattern.matcher(seperatorString);
+
+		while (matcher.find()) {
+			String seperator = matcher.group(1);
+			seperatorList.add(seperator);
+		}
+
+		return seperatorList.stream()
+			.collect(Collectors.joining("|"));
 	}
 
 	private String getMoreThanTwoWordsSeperator(String seperatorString) {
@@ -89,8 +111,16 @@ public class StringCalculator {
 	}
 
 	private boolean isMoreThanTwoWordsSeperator(String numbers) {
-		String regExpression = "[\\[](.*?)[]]";
+		String regExpression = "[\\[](.*?)[\\]]";
 		return isMatched(regExpression, numbers);
+	}
+
+	private boolean havaMultiSeperator(String seperatorString) {
+		if (seperatorString.contains("][")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	private boolean isMatched(String regExpression, String input) {
@@ -99,9 +129,9 @@ public class StringCalculator {
 		return matcher.find();
 	}
 
-	private String getMatched(String regExpression, String string) {
+	private String getMatched(String regExpression, String input) {
 		Pattern speratorPattern = Pattern.compile(regExpression);
-		Matcher matcher = speratorPattern.matcher(string);
+		Matcher matcher = speratorPattern.matcher(input);
 		if(matcher.find()) {
 			return matcher.group(1);
 		} else {

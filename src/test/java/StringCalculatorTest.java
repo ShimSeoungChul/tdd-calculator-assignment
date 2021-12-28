@@ -62,4 +62,11 @@ class StringCalculatorTest {
 
 		assertThat(returnNum).isEqualTo(6);
 	}
+
+	@Test
+	void 두_개_이상의_구분자_사용_가능 () throws Exception {
+		int returnNum = stringCalculator.add("//[-][%]\n1-2%3");
+
+		assertThat(returnNum).isEqualTo(6);
+	}
 }

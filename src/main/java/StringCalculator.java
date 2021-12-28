@@ -5,8 +5,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class StringCalculator {
-	private final String regExpression = "//(.*?)\n";
-	Pattern speratorPattern = Pattern.compile(regExpression);
 
 	public int add(String numbers) throws Exception {
 		if (numbers.equals("")) {
@@ -67,17 +65,44 @@ public class StringCalculator {
 	}
 
 	private String deleteSeperatorPart(String numbers) {
+		String regExpression = "//(.*?)\n";
 		return numbers.replaceAll(regExpression, "");
 	}
 
 	private boolean hasSeperator(String numbers) {
-		Matcher matcher = speratorPattern.matcher(numbers);
-		return matcher.find();
+		String regExpression = "//(.*?)\n";
+		return isMatched(regExpression, numbers);
 	}
 
 	private String getSeperator(String numbers) {
-		Matcher matcher = speratorPattern.matcher(numbers);
-		if (matcher.find()) {
+		String regExpression = "//(.*?)\n";
+		String seperatorPart = getMatched(regExpression, numbers);
+		if (isMoreThanTwoWordsSeperator(seperatorPart)) {
+			seperatorPart = getMoreThanTwoWordsSeperator(seperatorPart);
+		}
+		return seperatorPart;
+	}
+
+	private String getMoreThanTwoWordsSeperator(String seperatorString) {
+		String regExpression = "[\\[](.*?)[\\]]";
+		return getMatched(regExpression, seperatorString);
+	}
+
+	private boolean isMoreThanTwoWordsSeperator(String numbers) {
+		String regExpression = "[\\[](.*?)[]]";
+		return isMatched(regExpression, numbers);
+	}
+
+	private boolean isMatched(String regExpression, String input) {
+		Pattern speratorPattern = Pattern.compile(regExpression);
+		Matcher matcher = speratorPattern.matcher(input);
+		return matcher.find();
+	}
+
+	private String getMatched(String regExpression, String string) {
+		Pattern speratorPattern = Pattern.compile(regExpression);
+		Matcher matcher = speratorPattern.matcher(string);
+		if(matcher.find()) {
 			return matcher.group(1);
 		} else {
 			throw new IllegalStateException("No Match Found");

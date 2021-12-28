@@ -55,4 +55,11 @@ class StringCalculatorTest {
 
 		assertThat(returnNum).isEqualTo(2);
 	}
+
+	@Test
+	void 두_글자_이상으로_이루어진_구분자_가능 () throws Exception {
+		int returnNum = stringCalculator.add("//[—]\n1—2—3");
+
+		assertThat(returnNum).isEqualTo(6);
+	}
 }

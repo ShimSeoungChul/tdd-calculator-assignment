@@ -25,4 +25,11 @@ class StringCalculatorTest {
 
 		assertThat(returnNum).isEqualTo(3);
 	}
+
+	@Test
+	void 인자가_두개를_초과하는_정수면_합계를_반환 () {
+		int returnNum = stringCalculator.add("1,2,3,4,5");
+
+		assertThat(returnNum).isEqualTo(15);
+	}
 }

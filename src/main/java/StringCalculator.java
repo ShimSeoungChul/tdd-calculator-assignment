@@ -3,7 +3,6 @@ import java.util.Arrays;
 import java.util.StringJoiner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.IntStream;
 
 public class StringCalculator {
 	private final String regExpression = "//(.*?)\n";
@@ -14,15 +13,19 @@ public class StringCalculator {
 			return 0;
 		} else {
 			String[] numStringArr = splitStringNumber(numbers);
-			int[] numArr = Arrays.stream(numStringArr)
-				.mapToInt(stringNum ->  Integer.parseInt(stringNum))
-				.toArray();
+			int[] numArr = stringArrTointArr(numStringArr);
 
 			checkNegative(numArr);
 
 			int sum = Arrays.stream(numArr).sum();
 			return sum;
 		}
+	}
+
+	private int[] stringArrTointArr(String[] numStringArr) {
+		return Arrays.stream(numStringArr)
+			.mapToInt(stringNum ->  Integer.parseInt(stringNum))
+			.toArray();
 	}
 
 	private void checkNegative(int[] numArr) throws Exception {

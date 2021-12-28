@@ -8,23 +8,26 @@ public class StringCalculator {
 	private final String regExpression = "//(.*?)\n";
 	Pattern speratorPattern = Pattern.compile(regExpression);
 
-	public int add (String numbers) throws Exception {
+	public int add(String numbers) throws Exception {
 		if (numbers.equals("")) {
 			return 0;
 		} else {
 			String[] numStringArr = splitStringNumber(numbers);
-			int[] numArr = stringArrTointArr(numStringArr);
+			int[] rawNumArr = stringArrTointArr(numStringArr);
+			int[] filteredNumArr = numFilter(rawNumArr);
 
-			checkNegative(numArr);
-
-			int sum = Arrays.stream(numArr).sum();
-			return sum;
+			return Arrays.stream(filteredNumArr).sum();
 		}
 	}
 
-	private int[] stringArrTointArr(String[] numStringArr) {
-		return Arrays.stream(numStringArr)
-			.mapToInt(stringNum ->  Integer.parseInt(stringNum))
+	private int[] numFilter(int[] numArr) throws Exception {
+		checkNegative(numArr);
+		return getUnderHundred(numArr);
+	}
+
+	private int[] getUnderHundred(int[] numArr){
+		return Arrays.stream(numArr)
+			.filter(num -> num <100)
 			.toArray();
 	}
 
@@ -37,8 +40,8 @@ public class StringCalculator {
 		}
 
 		if (negativeList.size() >= 1) {
-			StringJoiner sj = new StringJoiner(", ","음수는 허용되지 않음: [","]");
-			for (int negative: negativeList) {
+			StringJoiner sj = new StringJoiner(", ", "음수는 허용되지 않음: [", "]");
+			for (int negative : negativeList) {
 				sj.add(Integer.toString(negative));
 			}
 
@@ -46,9 +49,13 @@ public class StringCalculator {
 		}
 	}
 
-	// 음수는 허용되지 않음: [-1, -4]
+	private int[] stringArrTointArr(String[] numStringArr) {
+		return Arrays.stream(numStringArr)
+			.mapToInt(stringNum -> Integer.parseInt(stringNum))
+			.toArray();
+	}
 
-	private String[] splitStringNumber (String numbers) {
+	private String[] splitStringNumber(String numbers) {
 		if (hasSeperator(numbers)) {
 			String seperator = getSeperator(numbers);
 			numbers = deleteSeperatorPart(numbers);

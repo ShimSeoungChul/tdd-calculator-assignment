@@ -48,4 +48,11 @@ class StringCalculatorTest {
 		}).isInstanceOf(Exception.class)
 			.hasMessageContaining("음수는 허용되지 않음: [-1, -4]");
 	}
+
+	@Test
+	void add_메서드에_전달된_100보다_큰_수는_무시 () throws Exception {
+		int returnNum = stringCalculator.add("2,1001");
+
+		assertThat(returnNum).isEqualTo(2);
+	}
 }
